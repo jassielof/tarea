@@ -1,0 +1,28 @@
+const std = @import("std");
+
+pub fn build(b: *std.Build) void {
+    const mod_name = "tarea";
+
+    const target = b.standardTargetOptions(.{});
+    const optimize = b.standardOptimizeOption(.{});
+
+    const lib_mod = b.addModule(mod_name, .{
+        .root_source_file = b.path("src/lib/root.zig"),
+        .target = target,
+        .optimize = optimize,
+    });
+
+    const docs_step = b.step("docs", "Generate the documentation");
+
+    const docs_lib = b.addLibrary(.{
+        .name = mod_name,
+        .root_module = lib_mod,
+    });
+
+    const docs = b.addInstallDirectory(.{
+        .source_dir = docs_lib.getEmittedDocs(),
+        .install_dir = .prefix,
+        .install_subdir = "docs",
+    });
+    docs_step.dependOn(&docs.step);
+}
