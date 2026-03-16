@@ -34,6 +34,7 @@ pub fn build(b: *std.Build) void {
         .install_dir = .prefix,
         .install_subdir = "docs",
     });
+
     docs_step.dependOn(&docs.step);
 }
 
